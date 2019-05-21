@@ -19,9 +19,7 @@
 
 # Rules for creating full sentences.
 
-2	ROOT	S .
-2	ROOT	S !
-1	ROOT	is it true that S ?     # mixing terminals and nonterminals is ok.
+#1	ROOT	S
 
 # The basic grammar rules.  Here's what the abbreviations stand for:
 #    S  = sentence
@@ -58,7 +56,7 @@
 1	Noun	president
 1	Noun	sandwich
 1	Noun	pickle
-1	Noun	chief of staff
+1	Noun	chief_of_staff
 1	Noun	floor
 
 1	Adj	fine

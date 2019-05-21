@@ -10,9 +10,50 @@ def load_sents_to_parse(filename):
                 sents.append(line)
     return sents
 
+def get_binary_rules(pcfg):
+    rules = dict()
+    for rule in pcfg._rules:
+        for rhs in pcfg._rules[rule]:
+            if len(rhs[0]) == 2:
+                try:
+                    rules[rule].append(rhs)
+                except:
+                    rules[rule] = []
+                    rules[rule].append(rhs)
+    return rules
+
 def cnf_cky(pcfg, sent):
     ### YOUR CODE HERE
-    raise NotImplementedError
+    pi = dict()
+    bp = dict()
+    sent = sent.split(' ')
+    n = len(sent)
+    non_terminals = [nt for nt in pcfg._rules if not pcfg.is_terminal(nt)]
+    binary_rules = get_binary_rules(pcfg)
+    for i in range(n):
+        for X in non_terminals:
+            for rule in pcfg._rules[X]:
+                pi[(i,i,X)] = rule[1]/pcfg._sums[X] if sent[i] in rule[0][0] else 0
+
+    for l in range(n-1):
+        for i in range(n-l):
+            j = i+l
+            for X in non_terminals:
+                max_prob = float('-inf')
+                if X not in binary_rules:
+                    continue
+                for binary_rule in binary_rules[X]:
+                    for s in range(i,j):
+                        q = binary_rule[1]/pcfg._sums[X]
+                        if (i,s,binary_rule[0][0]) in pi and (s+1,j,binary_rule[0][1]) in pi:
+                            prob = q * pi[(i,s,binary_rule[0][0])] * pi[(s+1,j,binary_rule[0][1])]
+                        else:
+                            prob = 0.0
+                        if prob > max_prob:
+                            max_prob = prob
+                            pi[(i,j,X)] = max_prob
+                            bp[(i,j,X)] = binary_rule
+
     ### END YOUR CODE
     return "FAILED TO PARSE!"
 
