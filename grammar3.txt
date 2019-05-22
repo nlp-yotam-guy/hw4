@@ -53,10 +53,10 @@
 1	Det	a
 1	Det	every
 
-1	Noun	president
-1	Noun	sandwich
+1	Noun	presi dent
+1	Noun	sand wich
 1	Noun	pickle
-1	Noun	chief_of_staff
+1	Noun	chief of staff
 1	Noun	floor
 
 1	Adj	fine
