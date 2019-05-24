@@ -14,7 +14,7 @@ def get_binary_rules(pcfg):
     rules = dict()
     for rule in pcfg._rules:
         for rhs in pcfg._rules[rule]:
-            if len(rhs[0]) == 2:# and not pcfg.is_terminal(rhs[0]):
+            if len(rhs[0]) == 2:
                 try:
                     rules[rule].append(rhs)
                 except:
@@ -141,5 +141,5 @@ if __name__ == '__main__':
     non_cnf_pcfg = PCFG.from_file_assert(sys.argv[2])
     sents_to_parse = load_sents_to_parse(sys.argv[3])
     for sent in sents_to_parse:
-        #print cnf_cky(cnf_pcfg, sent)
+        print cnf_cky(cnf_pcfg, sent)
         print non_cnf_cky(non_cnf_pcfg, sent)
