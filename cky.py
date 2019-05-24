@@ -10,28 +10,40 @@ def load_sents_to_parse(filename):
                 sents.append(line)
     return sents
 
-def get_binary_rules(pcfg):
-    rules = dict()
-    for rule in pcfg._rules:
-        for rhs in pcfg._rules[rule]:
-            if len(rhs[0]) == 2:
-                try:
-                    rules[rule].append(rhs)
-                except:
-                    rules[rule] = []
-                    rules[rule].append(rhs)
-    return rules
-
-
-def is_long_terminal(sent,i,rule):
-    r = len(rule[0])
-    if r == 1:
-        return False
-    return sent[i:i+r] == rule[0]
-
 
 def cnf_cky(pcfg, sent):
     ### YOUR CODE HERE
+    def get_binary_rules(pcfg):
+        rules = dict()
+        for rule in pcfg._rules:
+            for rhs in pcfg._rules[rule]:
+                if len(rhs[0]) == 2:
+                    try:
+                        rules[rule].append(rhs)
+                    except:
+                        rules[rule] = []
+                        rules[rule].append(rhs)
+        return rules
+
+    def create_tree(bp, pi, n, sent):
+        return create_tree_rec(1, n, 'ROOT', bp, pi, sent)
+
+    def create_tree_rec(i, j, symbol, bp, pi, sent):
+        if pi[(i, j, symbol)] == 0.0:
+            raise KeyError
+        if i == j:
+            leaf = '(' + symbol + ' ' + sent[i - 1] + ')'
+            return leaf
+        s = bp[(i, j, symbol)][1]
+        expansion = bp[(i, j, symbol)][0][0]
+        if i == s:
+            left = symbol + ' ' + '(' + expansion[0] + ' ' + sent[i - 1] + ')'
+            right = create_tree_rec(s + 1, j, expansion[1], bp, pi, sent)
+            return '(' + left + ' ' + right + ')'
+        left = create_tree_rec(i, s, expansion[0], bp, pi, sent)
+        right = create_tree_rec(s + 1, j, expansion[1], bp, pi, sent)
+        return '(' + symbol + ' ' + left + ' ' + right + ')'
+
     pi = dict()
     bp = dict()
     sent = sent.split(' ')
@@ -72,67 +84,51 @@ def cnf_cky(pcfg, sent):
     ### END YOUR CODE
     return "FAILED TO PARSE!"
 
-def reduce_to_cnf(pcfg,sent):
-    import copy
-    pcfg_cnf = copy.deepcopy(pcfg)
-    cnf_sent = []
-    n = len(sent)
-    i = 0
-    while i < n:
-        next_i = False
-        for symbol in pcfg._rules:
-            for rule in pcfg._rules[symbol]:
-                if is_long_terminal(sent,i,rule):
-                    token = '_'.join(rule[0])
-                    cnf_sent.append(token)
-                    count = rule[1]
-                    if rule in pcfg_cnf._rules[symbol]:
-                        pcfg_cnf._rules[symbol].remove(rule)
-                        pcfg_cnf._rules[symbol].append(([token],count))
-                    i += len(rule[0])-1
-                    next_i = True
-                    break
-                elif sent[i] in rule[0]:
-                    cnf_sent.append(sent[i])
-                    next_i = True
-                if next_i:
-                    break
-            if next_i:
-                break
-        i+=1
-    return pcfg_cnf,cnf_sent
 
-### not modified yet - identical to cnf_cky ###
 def non_cnf_cky(pcfg, sent):
     ### YOUR CODE HERE
+
+    def is_long_terminal(sent, i, rule):
+        r = len(rule[0])
+        if r == 1:
+            return False
+        return sent[i:i + r] == rule[0]
+
+    def reduce_to_cnf(pcfg, sent):
+        import copy
+        pcfg_cnf = copy.deepcopy(pcfg)
+        cnf_sent = []
+        n = len(sent)
+        i = 0
+        while i < n:
+            next_i = False
+            for symbol in pcfg._rules:
+                for rule in pcfg._rules[symbol]:
+                    if is_long_terminal(sent, i, rule):
+                        token = '_'.join(rule[0])
+                        cnf_sent.append(token)
+                        count = rule[1]
+                        if rule in pcfg_cnf._rules[symbol]:
+                            pcfg_cnf._rules[symbol].remove(rule)
+                            pcfg_cnf._rules[symbol].append(([token], count))
+                        i += len(rule[0]) - 1
+                        next_i = True
+                        break
+                    elif sent[i] in rule[0]:
+                        cnf_sent.append(sent[i])
+                        next_i = True
+                    if next_i:
+                        break
+                if next_i:
+                    break
+            i += 1
+        return pcfg_cnf, cnf_sent
+
     split_sent = sent.split(' ')
     pcfg_cnf, split_sent = reduce_to_cnf(pcfg, split_sent)
     tree = cnf_cky(pcfg_cnf, ' '.join(split_sent))
     ### END YOUR CODE
     return tree.replace('_', ' ')
-
-
-def create_tree(bp,pi,n,sent):
-    return create_tree_rec(1, n, 'ROOT', bp, pi, sent)
-
-
-def create_tree_rec(i,j,symbol,bp,pi,sent):
-    if pi[(i,j,symbol)] == 0.0:
-        raise KeyError
-    if i == j:
-        # if pi[(i,j,symbol)] == 0.0:
-        #     raise KeyError
-        leaf = '(' + symbol + ' ' + sent[i-1] + ')'
-        return leaf
-    s = bp[(i, j, symbol)][1]
-    expansion = bp[(i, j, symbol)][0][0]
-    if i == s:
-        left = symbol + ' ' + '(' + expansion[0] + ' ' + sent[i-1] + ')'
-        right = create_tree_rec(s+1,j,expansion[1],bp,pi,sent)
-        return '(' + left + ' ' + right + ')'
-    left = create_tree_rec(i,s,expansion[0],bp,pi,sent)
-    right = create_tree_rec(s+1,j,expansion[1],bp,pi,sent)
-    return '('+ symbol + ' ' + left + ' ' + right + ')'
 
 
 if __name__ == '__main__':
