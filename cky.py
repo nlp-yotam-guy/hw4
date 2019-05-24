@@ -137,5 +137,5 @@ if __name__ == '__main__':
     non_cnf_pcfg = PCFG.from_file_assert(sys.argv[2])
     sents_to_parse = load_sents_to_parse(sys.argv[3])
     for sent in sents_to_parse:
-#        print cnf_cky(cnf_pcfg, sent)
-        print non_cnf_cky(non_cnf_pcfg, sent)
+        print cnf_cky(cnf_pcfg, sent)
+#        print non_cnf_cky(non_cnf_pcfg, sent)
