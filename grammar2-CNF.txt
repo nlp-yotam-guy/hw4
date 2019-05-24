@@ -44,8 +44,6 @@
 1   ROOT    Noun Verb
 1   ROOT    Pro Adj
 1   Noun    Noun Verb
-
-
 1   NP      Det X7
 1   Conj    Conj X1
 1   Conj    Conj Verb
