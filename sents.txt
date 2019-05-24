@@ -12,3 +12,7 @@ the president thought that a sandwich sighed a pickle
 the pickle kissed the president that ate the sandwich
 the pickle kissed the sandwich that the president ate
 the pickle kissed the sandwich that the president thought that Sally ate
+
+the citizens choose the president
+the president chooses the chief_of_staff
+the president and the chief_of_staff choose the sandwich
