@@ -41,14 +41,20 @@
 2	Noun	Adj Noun
 
 1   ROOT    NP Verb
+1   ROOT    NP Non_Object_Verb
 1   ROOT    Noun Verb
+1   ROOT    Noun Non_Object_Verb
 1   ROOT    Pro Adj
 1   Noun    Noun Verb
+
+
 1   NP      Det X7
 1   Conj    Conj X1
 1   Conj    Conj Verb
-1   Verb    Verb X2
+1   Conj    Conj Non_Object_Verb
 1   Verb    Conj X1
+1   Verb    Verb X11
+1   X11     Det X1
 1   X2      Conj  Noun
 1   Verb    Verb Adj
 1   Verb    aux Verb
@@ -77,15 +83,16 @@
 1	Verb	kissed
 1	Verb	understood
 1	Verb	pickled
-1	Verb	sighed
 1   Verb    thought
 1   Verb    eating
 1   Verb    worked
 
+1	Non_Object_Verb sighed
 
 1	Det	the
 1	Det	a
 1	Det	every
+1   Det    that
 
 1	Noun	president
 1	Noun	sandwich
@@ -109,7 +116,6 @@
 
 1   Conj    and
 1   Conj    or
-1   Conj    that
 
 1   Adv     very
 
