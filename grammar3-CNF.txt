@@ -1,121 +1,101 @@
-#Grammer3-CNF:
-
-
-# Symbols in the grammar are case-sensitive.
-#
-# This grammar uses a convention that
-#    - terminals are lowercase          (president)
-#    - preterminals are capitalized     (Noun)
-#    - other nonterminals are all-caps  (NP)
-#
-# This convention just makes grammars more readable to humans.  Thus:
-#
-#    - When *you* are writing grammars, you should
-#      follow this convention unless you have a good reason not to.
-#
-#    - But the  *program* should still work with grammars that don't
-#      follow this convention.  So how can the program reliably tell
-#      the difference between terminal and nonterminal symbols?  If
-#      there is at least one rule for rewriting a symbol, then that
-#      symbol is a nonterminal and should be rewritten.
+# grammar 2 supports:
+#(a) Sally ate a sandwich .
+#(b) Sally and the president wanted and ate a sandwich .
+#(c) the president sighed .
+#(d) the president thought that a sandwich sighed .
+#(e) it perplexed the president that a sandwich ate Sally .
+#(f) the very very very perplexed president ate a sandwich .
+#(g) the president worked on every proposal on the desk .
+#(h) Sally is lazy .
+#(i) Sally is eating a sandwich.
+#(j) the president thought that sally is a sandwich
 #######################
 
 # Rules for creating full sentences.
 
-#1 ROOT   S
+# change the weight to more sentences ending with . later ! and than complex
+10	ROOT	S Dot
+3	ROOT	S ExcMark
+#1	ROOT	is it true that S ?     # mixing terminals and nonterminals is ok.
 
 # The basic grammar rules.  Here's what the abbreviations stand for:
 #    S  = sentence
 #    NP = noun phrase
-#    VP = verb phrase
+#    VP = TVerb phrase
 #    PP = prepositional phrase
+#    And = link conjunctions
+#    That = sentence conjunctions
 #    Det = determiner (sometimes called "article")
 #    Prep = preposition
 #    Adj = adjective
-#    Conj = conjunction
-#    Adv = adverb
-#    Pro = pronoun
+#    IVerb = intransitive TVerb
+#    TVerb = transitive TVerb
+#    VerbThat = verb that ('thought that')
+#    Vbz = is
+#    Ing = ing TVerb
+#    Name = NPP
 
-1  ROOT   NP X13
-1  ROOT   NPP X13P
-1   X13     VP Dot
-1   X13P     VPP Dot
-1  VP Verb NP
-1  VPP VerbP NPP
-1  VPP VerbP DetPhrase
-1  DetPhrase    Det Noun
-4  NP Det Noun
-1  NP Noun CP
-4  CP Conj Noun
-1  Noun Det Noun
-1  ROOT    NPP X16P
-4  NPP DetP Plural
-#4  NPP Det Noun
-1  NP NP PP
+4	S	NP VP
+1	S	NP IVerb
+4	S	Name VP
+1	S	Name IVerb
+4	VP	TVerb NP
+1	VP	TVerb Name
+20	NP	Det Noun
+4	NP	NP PP
+1	NP	Name PP
+4	PP	Prep NP
+1	PP	Prep Name
+5	Noun	Adj Noun
 
-1  NPP NP CPP
-1  CPP Conj NPP
+#rules for grammar2
+# rule to support (a): "Sally" only NP with no del
+#10   NP  Name
 
-2  PP Prep NP
-2  Noun   Adj Noun
-2  Plural Adj Plural
-1   ROOT    NP X14
-1   X14     Verb Dot
-1   ROOT    NP X15
-1   X15     Non_Object_Verb Dot
-1   ROOT    Noun X16
+# rules to support (b): using and "Sally and the president", "wanted and ate"
+1   NP  NP And.NP
+1   And.NP  And NP
 
-1   X16     Verb Dot
-1   X16P    X17P Dot
-1   X16P    VerbP Dot
-1   X17P     VerbP X24
-1   X24     Det Noun
-1   ROOT    Noun X17
-1   X17     Non_Object_Verb Dot
-1   ROOT    Pro X18
-1   X18     X12 Dot
-1   Noun    Noun Verb
-#1   Plural    Plural VerbP
-1   X12     Adj NP
-1   NP      Det X7
-1   CP    Conj X1
-1   CP    Conj Verb
+1   NP  Name And.NP
+1   And.NP  And NP
 
-1   CP    Conj Non_Object_Verb
-1   Verb    Verb PP
-1   Verb    Verb X11
-1   X11     Det X1
-1   X11     Det X20
-1   X20     NP VP
-1   X11     Det Verb
+1   NP  NP And.Name
+1   And.Name  And Name
 
-1   Verb    Verb Adj
-1   Verb    aux Verb_Present
-1   Verb    Verb X3
-1   X3      X8 Noun
-1   X3      X8 Plural
-1   X8     Prep X1
-1   X1      Det Noun
-1   Noun    Noun X9
-1   Noun    Noun X19
-1   Plural    Plural X19P
-1   X19     Det VP
-1   X19     Det X20
-1   X20     Det Noun
-#1   X19P     DetP VerbP
-1   X19P     Det X20P
-1   X20P     DetP Plural
-1   X9      Prep X1
-1   X7      Adv  X4
-1   X4      Adv  X5
-1   X5      Adv   X6
-1   Adv     Adv  X6
-1   X5      Adv   X6P
-1   Adv     Adv  X6P
-1   X6      Adj  Noun
-1   X6P      Adj  Noun
-1   Adj     Adj  Noun
-1   Adj     Adj  X1
+1   TVerb  TVerb    And.TVerb
+1   And.TVerb   And TVerb
+
+1   IVerb  IVerb    And.IVerb
+1   And.IVerb   And IVerb
+
+# rule to support (c): "sighted" is intransitive
+#3	VP	IVerb
+
+# rule to support (d):  "thought that a"
+1   VP  VerbThat That.S
+1   That.S That S
+
+# rule to support (e): "it perplexed the president that"
+1   VP  TVerb   NP.That.S
+1   NP.That.S   NP  That.S
+1   That.S  That    S
+
+# rule to support (f): "the very very very perplexed" very has to come before an adj
+1   Adj Adv Adj
+
+# rules to support (g): "on every proposal on the desk" allows Det Noun Det Noun "worked on"
+2	VP	IVerb PP
+1	PP	PP PP
+
+# rule to support (h): "is lazy"
+3   VP  Vbz Adj
+
+# rule to support (i): "is eating"
+3	VP	Vbz Ing.NP
+1   Ing.NP  Ing NP
+
+# rule to support (j): "is a sandwitch"
+3   VP  Vbz NP
 
 
 # Vocabulary.  Your program can see that "ate" is a terminal
@@ -124,59 +104,91 @@
 # terminals, like "chief of staff") is called a "preterminal."  Notice
 # that a preterminal is a special kind of nonterminal.
 
-3  Verb   ate
-3  Verb   wanted
-3  Verb   kissed
-3  Verb   understood
-3  Verb   pickled
-3  Verb   thought
-3  Verb   worked
-3  Verb   chooses
+3	TVerb	ate
+3	TVerb	wanted
+3	TVerb	kissed
+3	TVerb	understood
+3	TVerb	pickled
+3   TVerb   perplexed
 
-3  Non_Object_Verb sighed
+1   Vbz    is
 
-3   Verb_Present    eating
-
-2  DetP    the
+1   Ing    eating
+1   Ing    kissing
 
 
-2  Det    a
-2  Det    that
-2  Det    the
-2  Det    every
+1   VerbThat   wanted
+1   VerbThat   understood
+1   VerbThat   thought
 
-4  Noun   president
-4  Noun   sandwich
-4  Noun   pickle
-4  Noun   chief_of_staff
-4  Noun   floor
-4  Noun    Sally
-4  Noun    proposal
-4  Noun    desk
+3   IVerb    sighed
+3   IVerb    worked
+3   IVerb    ate
+3	IVerb	 kissed
 
-4  Adj    fine
-4  Adj    delicious
-4  Adj    perplexed
-4  Adj    pickled
-4  Adj lazy
+2	Det	the
+2	Det	a
+1	Det	every
 
-1  Prep   with
-1  Prep   on
-1  Prep   under
-1  Prep   in
+1	Noun	president
+1	Noun	sandwich
+1	Noun	pickle
+1	Noun	chief of staff
+1	Noun	floor
+1   Noun    proposal
+1   Noun    desk
 
-1   Conj    and
-1   Conj    or
+2	Adj	fine
+2	Adj	delicious
+2	Adj	perplexed
+2	Adj	pickled
+2   Adj lazy
 
-2   Adv     very
+1	Prep	with
+1	Prep	on
+1	Prep	under
+1	Prep	in
 
-1   Pro     it
+1   And     and
+1   That    that
+1   Adv     very
+1   Name    Sally
+1   Name    it
 
-1   aux    is
+1   Dot .
+1   ExcMark !
 
-1   Dot     .
 
-4   Plural citizens
+# grammar 3:
 
-3   VerbP   choose
+# rule to support "the pickle kissed the president that ate the sandwich"
+1   S   S   That.VP
+1   That.VP That    VP
+
+4	S	NPS VPS
+4	S	Name VPS
+4	S	NPP VPP
+1   NPS  Det NounS
+4	VPS	VerbS   NPS
+1	VPS	VerbS   Name
+1   VPP VerbP   NP
+1   VPP VerbP   NPS
+1   VPP VerbP   NPP
+
+1   NPP Det NounP
+1   NPP  NP  And.NP
+1   And.NP And  NP
+
+1   NounP    citizens
+
+1	NounS	president
+1	NounS	sandwich
+1	NounS	pickle
+1	NounS	chief of staff
+1	NounS	floor
+1   NounS   proposal
+1   NounS   desk
+
+1   VerbS   chooses
+1   VerbP   choose
 

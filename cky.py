@@ -53,7 +53,7 @@ def cnf_cky(pcfg, sent):
     for i in range(1,n+1):
         for X in non_terminals:
             for rule in pcfg._rules[X]:
-                pi[(i,i,X)] = rule[1]/pcfg._sums[X] if sent[i-1] in rule[0][0] else 0.0
+                pi[(i,i,X)] = rule[1]/pcfg._sums[X] if sent[i-1] == rule[0][0] else 0.0
                 if pi[(i, i, X)] > 0.0:
                     break
 
@@ -93,7 +93,8 @@ def non_cnf_cky(pcfg, sent):
         if r == 1:
             return False
         return sent[i:i + r] == rule[0]
-
+    
+    # TODO: problem with reduce_to_cnf
     def reduce_to_cnf(pcfg, sent):
         import copy
         pcfg_cnf = copy.deepcopy(pcfg)
@@ -106,12 +107,13 @@ def non_cnf_cky(pcfg, sent):
                 for rule in pcfg._rules[symbol]:
                     if is_long_terminal(sent, i, rule):
                         token = '_'.join(rule[0])
-                        cnf_sent.append(token)
+                        if cnf_sent[len(cnf_sent)-1] != token:
+                            cnf_sent.append(token)
                         count = rule[1]
                         if rule in pcfg_cnf._rules[symbol]:
                             pcfg_cnf._rules[symbol].remove(rule)
                             pcfg_cnf._rules[symbol].append(([token], count))
-                        i += len(rule[0]) - 1
+                            i += len(rule[0]) - 1
                         next_i = True
                         break
                     elif sent[i] in rule[0]:
@@ -133,9 +135,9 @@ def non_cnf_cky(pcfg, sent):
 
 if __name__ == '__main__':
     import sys
-    cnf_pcfg = PCFG.from_file_assert(sys.argv[1], assert_cnf=True)
+    #cnf_pcfg = PCFG.from_file_assert(sys.argv[1], assert_cnf=True)
     non_cnf_pcfg = PCFG.from_file_assert(sys.argv[2])
     sents_to_parse = load_sents_to_parse(sys.argv[3])
     for sent in sents_to_parse:
-        print cnf_cky(cnf_pcfg, sent)
-        #print non_cnf_cky(non_cnf_pcfg, sent)
+        #print cnf_cky(cnf_pcfg, sent)
+        print non_cnf_cky(non_cnf_pcfg, sent)
