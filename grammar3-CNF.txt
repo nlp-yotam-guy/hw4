@@ -180,24 +180,3 @@
 
 3   VerbP   choose
 
-#Sents:
-#Sally and the president wanted and ate a sandwich .
-#the president sighed .
-#the president thought that a sandwich sighed .
-#it perplexed the president that a sandwich ate Sally .
-#the very very very perplexed president ate a sandwich .
-#the president worked on every proposal on the desk .
-#Sally is lazy .
-#Sally is eating a sandwich .
-#the president thought that Sally is a sandwich .
-#the pickle kissed the president that ate the sandwich .
-#the pickle kissed the sandwich that the president ate .
-#the pickle kissed the sandwich that the president thought that Sally ate .
-#the citizens choose the president .
-#the president and the chief_of_staff choose the sandwich .
-
-#the president thought that a sandwich sighed a pickle .
-#problematic sentences:
-#Sally ate a sandwich .
-#the president choose the chief_of_staff .
-#it perplexed a lazy desk .
