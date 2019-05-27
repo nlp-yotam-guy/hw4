@@ -138,7 +138,7 @@
 3   Verb_Present    eating
 
 2  DetP    the
-2  DetP    every
+
 
 2  Det    a
 2  Det    that
@@ -150,15 +150,15 @@
 4  Noun   pickle
 4  Noun   chief_of_staff
 4  Noun   floor
-4   Noun    Sally
-4   Noun    proposal
-4   Noun    desk
+4  Noun    Sally
+4  Noun    proposal
+4  Noun    desk
 
 4  Adj    fine
 4  Adj    delicious
 4  Adj    perplexed
 4  Adj    pickled
-4   Adj lazy
+4  Adj lazy
 
 1  Prep   with
 1  Prep   on
