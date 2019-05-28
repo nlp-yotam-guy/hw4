@@ -93,7 +93,15 @@ def non_cnf_cky(pcfg, sent):
         if r == 1:
             return False
         return sent[i:i + r] == rule[0]
-    
+
+    def update_grammar(token, count, pcfg, long_terminal):
+        for symbol in pcfg._rules:
+            for rule in pcfg._rules[symbol]:
+                if rule[0] == long_terminal:
+                    pcfg._rules[symbol].remove(rule)
+                    pcfg._rules[symbol].append(([token], count))
+
+
     # TODO: problem with reduce_to_cnf
     def reduce_to_cnf(pcfg, sent):
         import copy
@@ -110,10 +118,8 @@ def non_cnf_cky(pcfg, sent):
                         if cnf_sent[len(cnf_sent)-1] != token:
                             cnf_sent.append(token)
                         count = rule[1]
-                        if rule in pcfg_cnf._rules[symbol]:
-                            pcfg_cnf._rules[symbol].remove(rule)
-                            pcfg_cnf._rules[symbol].append(([token], count))
-                            i += len(rule[0]) - 1
+                        update_grammar(token, count, pcfg_cnf,rule[0])
+                        i += len(rule[0]) - 1
                         next_i = True
                         break
                     elif sent[i] in rule[0]:
