@@ -124,7 +124,11 @@
 1	Noun	president
 1	Noun	sandwich
 1	Noun	pickle
-1	Noun	chief of staff
+1	Noun	Chief OF.STAFF
+1   Chief   chief
+1	OF.STAFF	Of	Staff
+1   Of  of
+1   Staff   staff
 1	Noun	floor
 1   Noun    proposal
 1   Noun    desk
@@ -161,6 +165,7 @@
 4	S	NPP VPP
 1   NPS  Det NounS
 4	VPS	VerbS   NPS
+4	VPS	IVerb   NPS
 1	VPS	VerbS   Name
 1   VPP VerbP   NP
 1   VPP VerbP   NPS
@@ -175,7 +180,7 @@
 1	NounS	president
 1	NounS	sandwich
 1	NounS	pickle
-1	NounS	chief of staff
+1	NounS	Chief OF.STAFF
 1	NounS	floor
 1   NounS   proposal
 1   NounS   desk
